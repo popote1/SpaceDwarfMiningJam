@@ -1,17 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 
-public class Cell : MonoBehaviour {
+public class Cell : MonoBehaviour
+{
+    public static List<Cell> Spawners = new List<Cell>();
     
     [SerializeField] private GameObject _wallobject;
     [SerializeField] private GameObject _prefabsGaz;
     [SerializeField] private GameObject _prefabspetrol;
     [SerializeField] private GameObject _prefabsMass;
+    [SerializeField] private GameObject _prefabsSpawner;
     [SerializeField] private GameObject _ressouces;
     
     [NonSerialized]public int MoveCost;
     [NonSerialized]public  Vector3 MoveDir;
+    [NonSerialized] public bool IsSpwaner;
 
     
 
@@ -60,6 +65,12 @@ public class Cell : MonoBehaviour {
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
+        }
+
+        if (IsSpwaner) {
+            IsWall = false;
+            Spawners.Add(this);
+            _ressouces = Instantiate(_prefabsSpawner, transform.position, Quaternion.identity);
         }
     }
 }

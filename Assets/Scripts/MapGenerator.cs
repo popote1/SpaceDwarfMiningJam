@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
@@ -24,6 +25,9 @@ public class MapGenerator : MonoBehaviour
     [SerializeField][Range(0, 1)] private float _torusRadius=0.35f;
     [SerializeField] private float _torusThikness = 40;
     [Range(0, 1)] [SerializeField] private float _ressourcesThreachhold = 0.7f;
+    [SerializeField][Range(0, 1)] private float _torusSpawnersRadius=0.35f;
+    [SerializeField] private float _torusSpawnersThikness = 40;
+    [Range(0, 1)] [SerializeField] private float _SpawnersThreachhold = 0.7f;
     private Cell[,] _cells;
 
     private Cell _pfOrigine;
@@ -182,17 +186,22 @@ public class MapGenerator : MonoBehaviour
                 _cells[x, z].IsWall = value < _threashHold;
                 _cells[x, z].Coordinate = new Vector2Int(x, z);
 
-                if (GetPerlinValue(x, z, _PerlinOffset.x + 100, _PerlinOffset.y + 100, 0.5f) * GetTorusValue(pos) >
+                if (GetPerlinValue(x, z, _PerlinOffset.x + 100, _PerlinOffset.y + 100, 0.5f) * GetHardTorusValue(pos , _torusRadius, _torusThikness) >
                     _ressourcesThreachhold) {
                     _cells[x, z].Ressouces = Cell.RessourceType.Gaz;
                 }
-                if (GetPerlinValue(x, z, _PerlinOffset.x + 200, _PerlinOffset.y + 200, 0.5f) * GetTorusValue(pos) >
+                if (GetPerlinValue(x, z, _PerlinOffset.x + 200, _PerlinOffset.y + 200, 0.5f) * GetHardTorusValue(pos , _torusRadius, _torusThikness) >
                     _ressourcesThreachhold) {
                     _cells[x, z].Ressouces = Cell.RessourceType.Pertrole;
                 }
-                if (GetPerlinValue(x, z, _PerlinOffset.x + 300, _PerlinOffset.y + 300, 0.5f) * GetTorusValue(pos) >
+                if (GetPerlinValue(x, z, _PerlinOffset.x + 300, _PerlinOffset.y + 300, 0.5f) * GetHardTorusValue(pos , _torusRadius, _torusThikness) >
                     _ressourcesThreachhold) {
                     _cells[x, z].Ressouces = Cell.RessourceType.Mass;
+                }
+                
+                if (GetPerlinValue(x, z, _PerlinOffset.x + 300, _PerlinOffset.y + 300, 0.3f) * GetHardTorusValue(pos , _torusSpawnersRadius, _torusSpawnersThikness) >
+                    _SpawnersThreachhold) {
+                    _cells[x, z].IsSpwaner = true;
                 }
 
                 _cells[x, z].SetRessourcePrefab();
@@ -229,6 +238,19 @@ public class MapGenerator : MonoBehaviour
         }
         return (dist - (radius - (_torusThikness / 2f)) )/ (_torusThikness / 2f);
         
+    }
+    
+    private float GetHardTorusValue(Vector2 pos , float torusRadius , float torusThickness)
+    {
+        float dist = Vector2.Distance(pos, _mapSize / 2);
+        float radius = _mapSize.x / 2f * torusRadius;
+        float innerRadius = _mapSize.x / 2f * torusRadius -torusThickness / 2;
+        float outerRadius = _mapSize.x / 2f * torusRadius + torusThickness / 2;
+        if (innerRadius < dist && dist < outerRadius)
+        {
+            return 1;
+        }
+        return 0;
     }
 
     #endregion

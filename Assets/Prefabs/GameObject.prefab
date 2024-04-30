@@ -157,6 +157,8 @@ MonoBehaviour:
     type: 3}
   _prefabsMass: {fileID: 595026147956237072, guid: 90be5133346e55245ab7b741f1653502,
     type: 3}
+  _prefabsSpawner: {fileID: 2897224794742949110, guid: 5f8e157a7f5368c408d087c081eeb971,
+    type: 3}
   _ressouces: {fileID: 0}
   Ressouces: 0
   Coordinate: {x: 0, y: 0}

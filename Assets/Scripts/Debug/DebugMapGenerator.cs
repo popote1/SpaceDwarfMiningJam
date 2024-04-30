@@ -27,6 +27,7 @@ public class DebugMapGenerator : MonoBehaviour {
     
     [Space(10)]
     [SerializeField] private bool _generateTorus;
+    [SerializeField] private bool _generateHardTorus;
     [SerializeField][Range(0, 1)] private float _torusRadius=0.5f;
     [SerializeField] private float _torusThikness = 5;
     [Space(10)]
@@ -99,6 +100,15 @@ public class DebugMapGenerator : MonoBehaviour {
                 }
             }
         }
+        if (_generateHardTorus)
+        {
+            for (int x = 0; x < _mapSize.x; x++) {
+                for (int z = 0; z < _mapSize.y; z++) {
+                    float value = GetHardTorusValue(new Vector2(x,z));
+                    _tiles[x, z].color = new Color(value, value, value, 1);
+                }
+            }
+        }
 
         if (_generateSampled) {
             for (int x = 0; x < _mapSize.x; x++) {
@@ -122,7 +132,7 @@ public class DebugMapGenerator : MonoBehaviour {
                 for (int z = 0; z < _mapSize.y; z++)
                 {
                     Vector2 pos = new Vector2(x, z);
-                    float value = GetPerlinValue(x, z) * GetTorusValue(pos);
+                    float value = GetPerlinValue(x, z) * GetHardTorusValue(pos);
                     if (_usThreashhold) {
                         if (value < _threashHold) _tiles[x, z].color = Color.black;
                         else _tiles[x, z].color = Color.white;
@@ -166,5 +176,17 @@ public class DebugMapGenerator : MonoBehaviour {
         {
             return (dist - (radius - (_torusThikness / 2f)) )/ (_torusThikness / 2f);
         }
+    }
+    private float GetHardTorusValue(Vector2 pos)
+    {
+        float dist = Vector2.Distance(pos, _mapSize / 2);
+        float radius = _mapSize.x / 2f * _torusRadius;
+        float innerRadius = _mapSize.x / 2f * _torusRadius -_torusThikness / 2;
+        float outerRadius = _mapSize.x / 2f * _torusRadius + _torusThikness / 2;
+        if (innerRadius < dist && dist < outerRadius)
+        {
+            return 1;
+        }
+         return 0;
     }
 }
