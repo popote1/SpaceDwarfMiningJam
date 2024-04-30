@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.Mathematics;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
@@ -13,6 +14,9 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private Cell _prefabCell;
     [SerializeField] private int _cellCicle = 300;
     [SerializeField] private float _cellCicleDelay = 0.01f;
+
+    [SerializeField] private GameObject _prefabDropPod;
+    [SerializeField] private GameObject _playerCharacter;
     
     [Space(20),Header("Parameters")]
     [Range(0, 5)] [SerializeField] private float _maxdistanceFactor = 0.77f;
@@ -40,8 +44,41 @@ public class MapGenerator : MonoBehaviour
 
     private void Start() {
         GenerateMap();
+        GeneratePlayer();
+        CalculateFlowField(GetCenterMap());
     }
     
+
+    private void GeneratePlayer() {
+        List<Cell> cells = new List<Cell>();
+        cells.AddRange(GetNeighbors4Diagonal(GetCenterMap()));
+        cells.AddRange(GetNeighbors4Straingt(GetCenterMap()));
+        cells.Add(GetCenterMap());
+        GameObject droppod=Instantiate(_prefabDropPod, GetCenterMap().transform.position, quaternion.identity);
+
+        foreach (var cell in cells) {
+            cell.Building = droppod;
+        }
+
+        if (GetCell(GetCenterMap().Coordinate + new Vector2Int(-2, 0))) {
+            _playerCharacter.transform.position =
+                GetCell(GetCenterMap().Coordinate + new Vector2Int(-2, 0)).transform.position;
+        }
+        else if (GetCell(GetCenterMap().Coordinate + new Vector2Int(2, 0))) {
+            _playerCharacter.transform.position =
+                GetCell(GetCenterMap().Coordinate + new Vector2Int(2, 0)).transform.position;
+        }
+        else if (GetCell(GetCenterMap().Coordinate + new Vector2Int(0, 2))) {
+            _playerCharacter.transform.position =
+                GetCell(GetCenterMap().Coordinate + new Vector2Int(0, 2)).transform.position;
+        }
+        else if (GetCell(GetCenterMap().Coordinate + new Vector2Int(0, -2))) {
+            _playerCharacter.transform.position =
+                GetCell(GetCenterMap().Coordinate + new Vector2Int(0, -2)).transform.position;
+        }
+
+    }
+
     #region Accesors
     
     public Cell GetCenterMap() {
@@ -83,6 +120,9 @@ public class MapGenerator : MonoBehaviour
     private Cell GetCell(int x, int y) {
         if (x < 0 || x >= _mapSize.x || y < 0 || y >= _mapSize.y) return null;
         return _cells[x, y];
+    }
+    private Cell GetCell(Vector2Int pos) {
+        return GetCell(pos.x, pos.y);
     }
 
     #endregion

@@ -154,6 +154,8 @@ MonoBehaviour:
   _hP: 10
   _isBurning: 0
   _ps_Burning: {fileID: 6685146302496302671}
+  _damage: 5
+  _attackDelay: 2
 --- !u!1001 &7015111452341249113
 PrefabInstance:
   m_ObjectHideFlags: 0

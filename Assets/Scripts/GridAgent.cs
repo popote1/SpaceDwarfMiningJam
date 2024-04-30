@@ -13,14 +13,21 @@ public class GridAgent : MonoBehaviour
     private int _hP = 10;
     [SerializeField]private bool _isBurning;
     [SerializeField] private GameObject _ps_Burning;
+
+    [Space(10), Header("Attack")] 
+    [SerializeField] private int _damage =5;
+    [SerializeField] private float _attackDelay;
+    [SerializeField]  private IDamageble _attacktarget;
     
     private MapGenerator _mapGenerator;
     private Rigidbody _rigidbody;
     private Vector3 _direction;
     private float _wallDestructionTimer;
+    
 
     private float t;
     private float _burningTimer=0;
+    private float _attackTimer;
     private void Start() {
         _mapGenerator = MapGenerator.Instance;
         _rigidbody=GetComponent<Rigidbody>();
@@ -31,6 +38,7 @@ public class GridAgent : MonoBehaviour
         ManageMovement();
         ManageWallDestruction();
         ManageBurning();
+        ManageAttack();
     }
 
     private void ManageDirectionUpdate() {
@@ -67,12 +75,22 @@ public class GridAgent : MonoBehaviour
             _collidedCell = _mapGenerator.GetCellFromWorld(other.transform.position);
             _wallDestructionTimer = 0;
         }
+        if (other.transform.CompareTag("DropPod")) {
+            Debug.Log("Hit DropPod");
+            _attacktarget = other.transform.GetComponent<IDamageble>();
+        }
         
     }
     private void OnCollisionExit(Collision other) {
         if (other.transform.CompareTag("Cell")&&_mapGenerator.GetCellFromWorld(other.transform.position)==_collidedCell) {
             _collidedCell = null;
         }
+        
+        if (other.transform.GetComponent<IDamageble>()!=null&&other.gameObject.GetComponent<IDamageble>()==_attacktarget) {
+            _attacktarget = null;
+        }
+
+        
     }
 
     private void ManageBurning() {
@@ -96,4 +114,13 @@ public class GridAgent : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    private void ManageAttack() {
+        _attackTimer -= Time.deltaTime;
+        if (_attackTimer <= 0 && _attacktarget != null) {
+            _attacktarget.TakeDamage(_damage);
+            Debug.Log("Do Attack");
+            _attackTimer = _attackDelay;
+        }
+    } 
 }
