@@ -133,6 +133,21 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3979172485202794653, guid: 66b8474233424ee4b86a76c70b7943a6,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3979172485202794653, guid: 66b8474233424ee4b86a76c70b7943a6,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3979172485202794653, guid: 66b8474233424ee4b86a76c70b7943a6,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3979172485202794653, guid: 66b8474233424ee4b86a76c70b7943a6,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 50
       objectReference: {fileID: 0}
@@ -4534,7 +4549,7 @@ GameObject:
   - component: {fileID: 2091533871}
   m_Layer: 0
   m_Name: GameManager
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

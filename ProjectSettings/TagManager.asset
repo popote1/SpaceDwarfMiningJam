@@ -8,11 +8,12 @@ TagManager:
   - DropPod
   - Cell
   - Ennemi
+  - Ground
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ground
   - Water
   - UI
   - 
