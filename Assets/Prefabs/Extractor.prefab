@@ -51,7 +51,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1053823160792621016}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -127,7 +127,7 @@ MonoBehaviour:
   _prefabsBarrel: {fileID: 465875716655066402, guid: abda3a12e0ae85944a8b855028794d36,
     type: 3}
   _ejectionpoint: {fileID: 2811315639501576281}
-  _ejectionPower: 2
+  _ejectionPower: 5
   _prefabPetrolExtractor: {fileID: 3645434232544753210, guid: 85db2dff2e8b5114cbb821d77b782f56,
     type: 3}
   _prefabGazlExtractor: {fileID: 4865607554042133698, guid: 551c0c0cf51ed0c4d8528b63d93668a4,

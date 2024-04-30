@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 3148191049743169421}
   - component: {fileID: 1053163807453506919}
   - component: {fileID: 465875716655066402}
+  - component: {fileID: 3833847651306655507}
   m_Layer: 0
   m_Name: Barrel
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.599, y: 0.195, z: 0.522}
-  m_LocalScale: {x: 0.23280782, y: 0.16573355, z: 0.23280782}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -120,8 +121,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2c07be06f9d1cd4d9865b690c2a2a85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mesh: {fileID: 0}
+  mesh: {fileID: 3148191049743169421}
   _gazColor: {r: 0, g: 1, b: 0, a: 1}
   _petrolColor: {r: 0, g: 0, b: 0, a: 1}
   _MassColor: {r: 0, g: 0, b: 1, a: 1}
+  _exploisionPrefab: {fileID: 5926053748651929171, guid: 22f612fc25dfce340b520720784f528a,
+    type: 3}
   resourceType: 0
+--- !u!54 &3833847651306655507
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8449710088808104854}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

@@ -18,6 +18,7 @@ public class GridAgent : MonoBehaviour , IDamageble
     [SerializeField] private int _damage =5;
     [SerializeField] private float _attackDelay;
     [SerializeField]  private IDamageble _attacktarget;
+    [SerializeField] private Animator _animator;
     
     private MapGenerator _mapGenerator;
     private Rigidbody _rigidbody;
@@ -79,6 +80,9 @@ public class GridAgent : MonoBehaviour , IDamageble
             Debug.Log("Hit DropPod");
             _attacktarget = other.transform.GetComponent<IDamageble>();
         }
+        if (other.transform.CompareTag("Item")) {
+            _attacktarget = other.transform.GetComponent<IDamageble>();
+        }
         
     }
     private void OnCollisionExit(Collision other) {
@@ -119,6 +123,7 @@ public class GridAgent : MonoBehaviour , IDamageble
         _attackTimer -= Time.deltaTime;
         if (_attackTimer <= 0 && _attacktarget != null) {
             _attacktarget.TakeDamage(_damage);
+            if (_animator!=null) _animator.SetTrigger("Attack");
             Debug.Log("Do Attack");
             _attackTimer = _attackDelay;
         }
