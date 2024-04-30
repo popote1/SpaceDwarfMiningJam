@@ -89,6 +89,8 @@ public class Cell : MonoBehaviour
             Spawners.Add(this);
             _ressouces = Instantiate(_prefabsSpawner, transform.position, Quaternion.identity);
         }
+
+        if (_ressouces != null) _ressouces.transform.SetParent(transform);
     }
 
     public void SetBurning(float time) {
