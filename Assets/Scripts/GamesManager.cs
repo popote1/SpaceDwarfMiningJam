@@ -25,8 +25,6 @@ public class GamesManager : MonoBehaviour
     private Cell _selectedCell;
     private Camera _camera;
     private float _spawntimer=0;
-    private bool _isInContructionMode;
-    private GameObject _contructionghost; 
     
     void Start() {
         _camera = Camera.main;
@@ -37,18 +35,15 @@ public class GamesManager : MonoBehaviour
     void Update() {
         
         // Debug Stuff
-        if( Input.GetButtonDown("Fire")&&!_isInContructionMode) ClickOnMap();
+        if( Input.GetButtonDown("Fire1")) ClickOnMap();
         if (Input.GetKeyDown(KeyCode.A) && _selectedCell != null)_mapGenerator.CalculateFlowField(_selectedCell);
         if (Input.GetKeyDown(KeyCode.E) && _selectedCell != null) SpawnGridActor();
         if (Input.GetKeyDown(KeyCode.R) && _selectedCell != null) DebugCell();
         if (Input.GetKeyDown(KeyCode.T) && _selectedCell != null) DoMassExplosion();
         if (Input.GetKeyDown(KeyCode.Y) && _selectedCell != null) DoBurningGround();
-        if (Input.GetKeyDown(KeyCode.U)) StartContructionMode();
-        if( Input.GetButtonDown("Fire")&&_isInContructionMode)ManageContruction();
         
         //GamesStuff
         ManageEnnemieSpawning();
-        ManagerContructionMode();
     }
     
     [ContextMenu("DisplayCenterMap")]
@@ -115,44 +110,6 @@ public class GamesManager : MonoBehaviour
             if (cell.Building == null) {
                 cell.SetBurning(10);
             }
-        }
-    }
-
-    private void StartContructionMode()
-    {
-        if (_isInContructionMode) {
-            Destroy(_contructionghost);
-            _isInContructionMode = false;
-            return;
-        }
-        _contructionghost = Instantiate(GreenDebugCube);
-        _isInContructionMode = true;
-    }
-
-    private void ManagerContructionMode()
-    {
-        if (!_isInContructionMode) return;
-        RaycastHit hit;
-        if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out hit, 50, _groundLayerMask))
-        {
-            Cell selectedCell =_mapGenerator.GetCellFromWorld(hit.point);
-            if (selectedCell == null|| selectedCell.IsWall ||selectedCell.Building!=null) return;
-            _contructionghost.transform.position = selectedCell.transform.position;
-        }
-    }
-
-    public void ManageContruction() {
-        RaycastHit hit;
-        if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out hit, 50, _groundLayerMask))
-        { 
-            Cell selectedCell =_mapGenerator.GetCellFromWorld(hit.point);
-            StartContructionMode();
-            if (selectedCell == null|| selectedCell.IsWall ||selectedCell.Building!=null) return;
-            
-            GameObject building =Instantiate(RedDebugCube, selectedCell.transform.position,quaternion.identity);
-            selectedCell.Building = building;
-            
-            
         }
     }
 }
