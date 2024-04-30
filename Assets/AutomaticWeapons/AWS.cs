@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AWS : MonoBehaviour
+public class AWS : MonoBehaviour, IBuildable
 {
     // AWS : Automated Weapon System
     // This class will be herited for each AWS ( turret mortars etc.. )
@@ -12,6 +12,7 @@ public class AWS : MonoBehaviour
     public DetectionZone _detectionZone;
     private float fireRate;
     private float timeSinceLastShot = 0f;
+    protected GridAgent _currenttarget;
 
     public float FireRate
     {
@@ -22,9 +23,9 @@ public class AWS : MonoBehaviour
     
     protected virtual void Update()
     {
+        CheckForTarget();
         timeSinceLastShot += Time.deltaTime;
-        if (timeSinceLastShot > 1 / fireRate)
-        {
+        if (timeSinceLastShot > 1 / fireRate) {
             timeSinceLastShot = 0;
             AttackEnemies();
         }
@@ -32,19 +33,12 @@ public class AWS : MonoBehaviour
         ManageOrientation();
     }
 
-    protected virtual void AttackEnemies()
-    {
-        if (_detectionZone.detectedEnemies.Count > 0)
-        {
-            foreach (Enemy enemy in _detectionZone.detectedEnemies)
-            {
-                AttackEnemy(enemy);
-            }
-        }
-        else return;
+    protected virtual void AttackEnemies() {
+        if(_currenttarget==null) return;
+        AttackEnemy(_currenttarget);
     }
 
-    protected virtual void AttackEnemy(Enemy enemy)
+    protected virtual void AttackEnemy(GridAgent enemy)
     {
         
     }
@@ -53,5 +47,24 @@ public class AWS : MonoBehaviour
     {
         
     }
-    
+
+    protected void CheckForTarget() {
+        if( _currenttarget!=null) return;
+        if (_detectionZone.GetEnnemi() != null) {
+            _currenttarget = _detectionZone.GetEnnemi();
+        }
+    }
+
+    public bool CanBeBuild(Cell cell) {
+        if (cell == null || cell.Building != null || cell.Ressouces != Metrics.RESSOURCETYPE.None ||
+            cell.IsWall|| cell.IsBurning) return false;
+        return true;
+    }
+
+    public GameObject SelecteBuild(Cell cell) {
+        return null;
+    }
+
+    public void OnBuild(Cell cell) {
+    }
 }

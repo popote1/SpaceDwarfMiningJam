@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.Mathematics;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
@@ -13,6 +14,9 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private Cell _prefabCell;
     [SerializeField] private int _cellCicle = 300;
     [SerializeField] private float _cellCicleDelay = 0.01f;
+
+    [SerializeField] private GameObject _prefabDropPod;
+    [SerializeField] private GameObject _playerCharacter;
     
     [Space(20),Header("Parameters")]
     [Range(0, 5)] [SerializeField] private float _maxdistanceFactor = 0.77f;
@@ -40,8 +44,41 @@ public class MapGenerator : MonoBehaviour
 
     private void Start() {
         GenerateMap();
+        GeneratePlayer();
+        CalculateFlowField(GetCenterMap());
     }
     
+
+    private void GeneratePlayer() {
+        List<Cell> cells = new List<Cell>();
+        cells.AddRange(GetNeighbors4Diagonal(GetCenterMap()));
+        cells.AddRange(GetNeighbors4Straingt(GetCenterMap()));
+        cells.Add(GetCenterMap());
+        GameObject droppod=Instantiate(_prefabDropPod, GetCenterMap().transform.position, quaternion.identity);
+
+        foreach (var cell in cells) {
+            cell.Building = droppod;
+        }
+
+        if (GetCell(GetCenterMap().Coordinate + new Vector2Int(-2, 0))) {
+            _playerCharacter.transform.position =
+                GetCell(GetCenterMap().Coordinate + new Vector2Int(-2, 0)).transform.position;
+        }
+        else if (GetCell(GetCenterMap().Coordinate + new Vector2Int(2, 0))) {
+            _playerCharacter.transform.position =
+                GetCell(GetCenterMap().Coordinate + new Vector2Int(2, 0)).transform.position;
+        }
+        else if (GetCell(GetCenterMap().Coordinate + new Vector2Int(0, 2))) {
+            _playerCharacter.transform.position =
+                GetCell(GetCenterMap().Coordinate + new Vector2Int(0, 2)).transform.position;
+        }
+        else if (GetCell(GetCenterMap().Coordinate + new Vector2Int(0, -2))) {
+            _playerCharacter.transform.position =
+                GetCell(GetCenterMap().Coordinate + new Vector2Int(0, -2)).transform.position;
+        }
+
+    }
+
     #region Accesors
     
     public Cell GetCenterMap() {
@@ -52,7 +89,7 @@ public class MapGenerator : MonoBehaviour
         return GetCell(Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.z));
     }
 
-    private List<Cell> GetNeighbors4Straingt(Cell cell) {
+    public List<Cell> GetNeighbors4Straingt(Cell cell) {
         List<Cell> returnList = new List<Cell>();
         Cell neighbor;
         neighbor = GetCell(cell.Coordinate.x - 1, cell.Coordinate.y );
@@ -65,7 +102,7 @@ public class MapGenerator : MonoBehaviour
         if(neighbor!=null) returnList.Add(neighbor);
         return returnList;
     }
-    private List<Cell> GetNeighbors4Diagonal(Cell cell) {
+    public List<Cell> GetNeighbors4Diagonal(Cell cell) {
         List<Cell> returnList = new List<Cell>();
         Cell neighbor;
         neighbor = GetCell(cell.Coordinate.x - 1, cell.Coordinate.y + 1);
@@ -83,6 +120,9 @@ public class MapGenerator : MonoBehaviour
     private Cell GetCell(int x, int y) {
         if (x < 0 || x >= _mapSize.x || y < 0 || y >= _mapSize.y) return null;
         return _cells[x, y];
+    }
+    private Cell GetCell(Vector2Int pos) {
+        return GetCell(pos.x, pos.y);
     }
 
     #endregion
@@ -188,15 +228,15 @@ public class MapGenerator : MonoBehaviour
 
                 if (GetPerlinValue(x, z, _PerlinOffset.x + 100, _PerlinOffset.y + 100, 0.5f) * GetHardTorusValue(pos , _torusRadius, _torusThikness) >
                     _ressourcesThreachhold) {
-                    _cells[x, z].Ressouces = Cell.RessourceType.Gaz;
+                    _cells[x, z].Ressouces = Metrics.RESSOURCETYPE.Gaz;
                 }
                 if (GetPerlinValue(x, z, _PerlinOffset.x + 200, _PerlinOffset.y + 200, 0.5f) * GetHardTorusValue(pos , _torusRadius, _torusThikness) >
                     _ressourcesThreachhold) {
-                    _cells[x, z].Ressouces = Cell.RessourceType.Pertrole;
+                    _cells[x, z].Ressouces = Metrics.RESSOURCETYPE.Petrole;
                 }
                 if (GetPerlinValue(x, z, _PerlinOffset.x + 300, _PerlinOffset.y + 300, 0.5f) * GetHardTorusValue(pos , _torusRadius, _torusThikness) >
                     _ressourcesThreachhold) {
-                    _cells[x, z].Ressouces = Cell.RessourceType.Mass;
+                    _cells[x, z].Ressouces = Metrics.RESSOURCETYPE.Mass;
                 }
                 
                 if (GetPerlinValue(x, z, _PerlinOffset.x + 300, _PerlinOffset.y + 300, 0.3f) * GetHardTorusValue(pos , _torusSpawnersRadius, _torusSpawnersThikness) >

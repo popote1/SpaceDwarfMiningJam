@@ -15,8 +15,7 @@ public class Mortar : AWS
         FireRate = 2f;
     }
 
-    protected override void AttackEnemy(Enemy enemy)
-    {
+    protected override void AttackEnemy(GridAgent enemy) {
         Debug.Log("Fire");
 
         MortarProjectile mortarProjectile = Instantiate(mortarPrefab, transform.position, Quaternion.identity);
@@ -27,10 +26,14 @@ public class Mortar : AWS
 
     protected override void ManageOrientation()
     {
-        if (_detectionZone.detectedEnemies.Count <= 0) return;
-        if (_detectionZone.detectedEnemies[0] == null) return;
+        //if (_detectionZone.detectedEnemies.Count <= 0) return;
+        //if (_detectionZone.detectedEnemies[0] == null) return;
 
-        Canon.up = CalculateControlPoint(transform.position, _detectionZone.detectedEnemies[0].transform.position)
+        if (_currenttarget == null) return;
+            
+        
+
+        Canon.up = CalculateControlPoint(transform.position, _currenttarget.transform.position)
                    - transform.position;
     }
 

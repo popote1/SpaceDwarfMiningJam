@@ -6,23 +6,43 @@ using UnityEngine;
 public class DetectionZone : MonoBehaviour
 {
    public AWS aws;
-   public List<Enemy> detectedEnemies = new List<Enemy>();
+   public List<GridAgent> detectedEnemies = new List<GridAgent>();
 
    private void OnTriggerEnter(Collider other)
    {
-      Enemy enemy = other.GetComponent<Enemy>();
-      if (enemy != null)
+      if (other.gameObject.CompareTag("Ennemi"))
       {
-         detectedEnemies.Add(enemy);
+         detectedEnemies.Add(other.GetComponent<GridAgent>());
+      }
+      
+   }
+
+   private void OnTriggerExit(Collider other) {
+      if (other.gameObject.CompareTag("Ennemi"))
+      {
+         detectedEnemies.Remove(other.GetComponent<GridAgent>());
       }
    }
 
-   private void OnTriggerExit(Collider other)
+   public GridAgent GetEnnemi() {
+      CheckOfNull();   
+      if (detectedEnemies.Count > 0) {
+         return detectedEnemies[0];
+      }
+      return null;
+      
+   }
+
+   public void CheckOfNull()
    {
-      Enemy enemy = other.GetComponent<Enemy>();
-      if (enemy != null)
+      foreach (var zombi in detectedEnemies.ToArray())
       {
-         detectedEnemies.Remove(enemy);
+         if (zombi == null)
+         {
+            detectedEnemies.Remove(zombi);
+            continue;
+         }
+         //if( Vector3.Distance(transform.position, zombi.transform.position)>MaxDistance) Zombis.Remove(zombi);
       }
    }
 }

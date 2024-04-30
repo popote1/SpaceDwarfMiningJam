@@ -120,10 +120,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a66925a983becf149a2ee8fffc7baff8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bezierCurve: {fileID: 0}
-  target: {fileID: 0}
   PosTarget: {x: 0, y: 0, z: 0}
-  speed: 10
-  gravity: -9.81
   maxHeight: 5
   LifeTime: 0.5
+  ExploisionEffect: {fileID: 5926053748651929171, guid: 22f612fc25dfce340b520720784f528a,
+    type: 3}

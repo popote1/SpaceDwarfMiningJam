@@ -18,7 +18,7 @@ public class Touret : AWS
     
     
 
-    protected override void AttackEnemy(Enemy enemy)
+    protected override void AttackEnemy(GridAgent enemy)
     {
         _targetEnemy = enemy.transform;
         ManageOrientation();

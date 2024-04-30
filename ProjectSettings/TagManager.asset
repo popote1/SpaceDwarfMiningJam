@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Item
+  - DropPod
+  - Cell
+  - Ennemi
+  - Ground
   layers:
   - Default
   - TransparentFX

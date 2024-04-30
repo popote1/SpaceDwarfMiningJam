@@ -1,14 +1,14 @@
 using System;
+using Unity.Mathematics;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class MortarProjectile : MonoBehaviour
 {
-    public Transform target;
     public Vector3 PosTarget;
-    public float speed = 10f;
-    public float gravity = -9.81f;
     public float maxHeight = 5f;
     public float LifeTime = 1f;
+    public GameObject ExploisionEffect;
 
     private float t = 0f;
     private Vector3 startPosition;
@@ -26,6 +26,9 @@ public class MortarProjectile : MonoBehaviour
 
         Vector3 position = CalculateQuadraticBezierPoint(t/LifeTime, startPosition, CalculateControlPoint(), PosTarget);
         transform.position = position;
+        transform.up =
+            CalculateQuadraticBezierPoint((t + Time.deltaTime) / LifeTime, startPosition, CalculateControlPoint(),
+                PosTarget) - position;
 
         if (t>=LifeTime) {
             OnEndOfLife();
@@ -34,6 +37,14 @@ public class MortarProjectile : MonoBehaviour
 
     private void OnEndOfLife()
     {
+        Collider[] cols = Physics.OverlapSphere(transform.position, 2);
+        foreach (var col in cols) {
+            if (col.GetComponent<IDamageble>() != null) {
+                col.GetComponent<IDamageble>().TakeDamage(10);
+            }
+        }
+
+        Instantiate(ExploisionEffect, transform.position, quaternion.identity);
         Destroy(gameObject);
     }
 
