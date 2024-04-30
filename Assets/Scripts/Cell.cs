@@ -28,11 +28,9 @@ public class Cell : MonoBehaviour
         }
     }
     
-    public enum  RessourceType {
-        None, Gaz,Pertrole, Mass
-    }
+    
 
-    public RessourceType Ressouces;
+    public Metrics.RESSOURCETYPE Ressouces;
 
     public int CellCost {
         get {
@@ -48,19 +46,17 @@ public class Cell : MonoBehaviour
 
     public void ResetMoveCost ()=> MoveCost = int.MaxValue;
 
-    public void SetRessourcePrefab()
-    {
-        switch (Ressouces)
-        {
-            case RessourceType.None:
+    public void SetRessourcePrefab(){
+        switch (Ressouces) {
+            case Metrics.RESSOURCETYPE.None:
                 break;
-            case RessourceType.Gaz:
+            case Metrics.RESSOURCETYPE.Gaz:
                 _ressouces = Instantiate(_prefabsGaz, transform.position, Quaternion.identity);
                 break;
-            case RessourceType.Pertrole:
+            case Metrics.RESSOURCETYPE.Pertrole:
                 _ressouces = Instantiate(_prefabspetrol, transform.position, Quaternion.identity);
                 break;
-            case RessourceType.Mass:
+            case Metrics.RESSOURCETYPE.Mass:
                 _ressouces = Instantiate(_prefabsMass, transform.position, Quaternion.identity);
                 break;
             default:

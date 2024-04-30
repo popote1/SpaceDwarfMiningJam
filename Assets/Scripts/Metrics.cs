@@ -5,4 +5,8 @@ public static class Metrics {
     public const int STRAINGHTMOVECOST = 10;
     public const int DIAGONALEMOVECOST = 10;
     public const float ACTORMOVEUPDATETIME = 0.5f;
+    
+    public  enum  RESSOURCETYPE {
+        None, Gaz,Pertrole, Mass
+    }
 }
