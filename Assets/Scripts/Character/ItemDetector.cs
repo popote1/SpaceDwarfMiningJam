@@ -1,6 +1,7 @@
 using Ressources;
 using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Character
 {
@@ -39,6 +40,9 @@ namespace Character
             if (other.CompareTag("Item") && !_parentCharacter.carrying && _canTake) {
                 if (other.gameObject == _itemDetected) {
                     if (Input.GetButtonDown("Pick")) {
+                        int randomClipChoose = Random.Range(0, _parentCharacter.carryDropSounds.Count);
+                        _parentCharacter.audioSource.clip = _parentCharacter.carryDropSounds[randomClipChoose];
+                        _parentCharacter.audioSource.Play();
                         Debug.Log("Picked item");
                         _parentCharacter.carrying = true;
                         _itemDetected.GetComponent<Rigidbody>().isKinematic = true;
@@ -63,6 +67,9 @@ namespace Character
                     _correctMachine = true;
                     if (Input.GetButtonDown("Pick") && _parentCharacter.carrying && _canDrop && _correctMachine)
                     {
+                        int randomClipChoose = Random.Range(0, _parentCharacter.carryDropSounds.Count);
+                        _parentCharacter.audioSource.clip = _parentCharacter.carryDropSounds[randomClipChoose];
+                        _parentCharacter.audioSource.Play();
                         Debug.Log("Putting the item in the fuckin machine");
                         other.GetComponent<MachineInfos>().capacityUsed += 1;
                         _parentCharacter.carrying = false;
@@ -84,6 +91,9 @@ namespace Character
                 _timerDrop = 0;
             }
             if (Input.GetButtonDown("Pick") && _parentCharacter.carrying && _canDrop && !_correctMachine) {
+                int randomClipChoose = Random.Range(0, _parentCharacter.carryDropSounds.Count);
+                _parentCharacter.audioSource.clip = _parentCharacter.carryDropSounds[randomClipChoose];
+                _parentCharacter.audioSource.Play();
                 Debug.Log("Drop item");
                 _parentCharacter.carrying = false;
                 Transform itemTransform = _parentCharacter.itemCarried.transform;
