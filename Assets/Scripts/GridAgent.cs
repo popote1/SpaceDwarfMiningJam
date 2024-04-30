@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class GridAgent : MonoBehaviour
+public class GridAgent : MonoBehaviour , IDamageble
 {
     [SerializeField] private float _acceleration = 5;
     [SerializeField] private float _maxSpeed = 10;

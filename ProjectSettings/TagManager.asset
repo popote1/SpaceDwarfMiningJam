@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Item
+  - DropPod
+  - Cell
+  - Ennemi
   layers:
   - Default
   - TransparentFX
