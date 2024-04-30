@@ -52,7 +52,7 @@ public class MapGenerator : MonoBehaviour
         return GetCell(Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.z));
     }
 
-    private List<Cell> GetNeighbors4Straingt(Cell cell) {
+    public List<Cell> GetNeighbors4Straingt(Cell cell) {
         List<Cell> returnList = new List<Cell>();
         Cell neighbor;
         neighbor = GetCell(cell.Coordinate.x - 1, cell.Coordinate.y );
@@ -65,7 +65,7 @@ public class MapGenerator : MonoBehaviour
         if(neighbor!=null) returnList.Add(neighbor);
         return returnList;
     }
-    private List<Cell> GetNeighbors4Diagonal(Cell cell) {
+    public List<Cell> GetNeighbors4Diagonal(Cell cell) {
         List<Cell> returnList = new List<Cell>();
         Cell neighbor;
         neighbor = GetCell(cell.Coordinate.x - 1, cell.Coordinate.y + 1);
@@ -188,15 +188,15 @@ public class MapGenerator : MonoBehaviour
 
                 if (GetPerlinValue(x, z, _PerlinOffset.x + 100, _PerlinOffset.y + 100, 0.5f) * GetHardTorusValue(pos , _torusRadius, _torusThikness) >
                     _ressourcesThreachhold) {
-                    _cells[x, z].Ressouces = Cell.RessourceType.Gaz;
+                    _cells[x, z].Ressouces = Metrics.RESSOURCETYPE.Gaz;
                 }
                 if (GetPerlinValue(x, z, _PerlinOffset.x + 200, _PerlinOffset.y + 200, 0.5f) * GetHardTorusValue(pos , _torusRadius, _torusThikness) >
                     _ressourcesThreachhold) {
-                    _cells[x, z].Ressouces = Cell.RessourceType.Pertrole;
+                    _cells[x, z].Ressouces = Metrics.RESSOURCETYPE.Petrole;
                 }
                 if (GetPerlinValue(x, z, _PerlinOffset.x + 300, _PerlinOffset.y + 300, 0.5f) * GetHardTorusValue(pos , _torusRadius, _torusThikness) >
                     _ressourcesThreachhold) {
-                    _cells[x, z].Ressouces = Cell.RessourceType.Mass;
+                    _cells[x, z].Ressouces = Metrics.RESSOURCETYPE.Mass;
                 }
                 
                 if (GetPerlinValue(x, z, _PerlinOffset.x + 300, _PerlinOffset.y + 300, 0.3f) * GetHardTorusValue(pos , _torusSpawnersRadius, _torusSpawnersThikness) >

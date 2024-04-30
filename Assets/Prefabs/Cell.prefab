@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7751567406133656043}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Cell
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -116,8 +116,8 @@ GameObject:
   - component: {fileID: 1139200298875989529}
   - component: {fileID: 1289729706949803205}
   m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
+  m_Name: Cell
+  m_TagString: Cell
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -159,6 +159,10 @@ MonoBehaviour:
     type: 3}
   _prefabsSpawner: {fileID: 2897224794742949110, guid: 5f8e157a7f5368c408d087c081eeb971,
     type: 3}
+  _prefabsBurningZone: {fileID: 2897224794742949110, guid: e82ffa5f35a3a1c449288f56f67779c0,
+    type: 3}
   _ressouces: {fileID: 0}
+  _burningeffect: {fileID: 0}
+  Building: {fileID: 0}
   Ressouces: 0
   Coordinate: {x: 0, y: 0}

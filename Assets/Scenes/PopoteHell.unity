@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -907,6 +907,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mapGenerator: {fileID: 997348102}
+  _doAutoSpawn: 0
+  _SpawnDelay: 2
+  _ennemiesPrefabs: {fileID: 3271731839824665394, guid: b5b195d8fcbbc8c44be992391eab2125,
+    type: 3}
   _prefabGridAgent: {fileID: 3271731839824665394, guid: b5b195d8fcbbc8c44be992391eab2125,
     type: 3}
   GreenDebugCube: {fileID: 7423795825579363355, guid: dc489020bfaaff84e988e67dcf9534c3,
@@ -1026,10 +1030,10 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1364510970}
-  - {fileID: 2028656630}
-  - {fileID: 997348101}
-  - {fileID: 332058046}
   - {fileID: 1820271877}
   - {fileID: 639668856}
   - {fileID: 2091533872}
+  - {fileID: 2028656630}
+  - {fileID: 997348101}
   - {fileID: 1057938282}
+  - {fileID: 332058046}
