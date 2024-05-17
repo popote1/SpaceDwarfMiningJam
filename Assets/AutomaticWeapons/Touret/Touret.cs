@@ -7,8 +7,11 @@ public class Touret : AWS
 {
 
     public float range = 10f;
-    public float damage = 10f;
+    public int damage = 10;
     public float rotationSpeed = 10f;
+    public Transform TurretHead;
+    public ParticleSystem PSShoot;
+    public GameObject ImpactPrefab;
     private Transform _targetEnemy;
 
     private void Start()
@@ -29,23 +32,23 @@ public class Touret : AWS
     {
         if (_targetEnemy != null)
         {
-            Vector3 direction = (_targetEnemy.position - transform.position).normalized;
+            Vector3 direction = (_targetEnemy.position - TurretHead.position).normalized;
             Quaternion targetRotation = Quaternion.LookRotation(Vector3.up, direction);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            TurretHead.rotation = Quaternion.RotateTowards(TurretHead.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
     
     private void Shoot()
     {
-        Vector3 direction = (_targetEnemy.position - transform.position).normalized;
+        if( PSShoot!=null) PSShoot.Play();
+        Vector3 direction = (_targetEnemy.position - TurretHead.position).normalized;
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, direction, out hit, range))
-        {
-            if (hit.collider.gameObject == _targetEnemy.gameObject)
-            {
-                Debug.DrawRay(transform.position, direction * hit.distance, Color.red, 0.1f);
-                // _targetEnemy.GetComponent<Enemy>().TakeDamage(damage);
+        if (Physics.Raycast(TurretHead.position, direction, out hit, range)) {
+            Instantiate(ImpactPrefab, hit.point, Quaternion.identity);
+            if (hit.collider.gameObject.GetComponent<IDamageble>()!=null) {
+                hit.collider.gameObject.GetComponent<IDamageble>().TakeDamage(damage);
             }
+            
         }
     }
 }

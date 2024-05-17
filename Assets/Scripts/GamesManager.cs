@@ -1,18 +1,30 @@
 
+using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class GamesManager : MonoBehaviour
 {
+    public static GamesManager Instance;
+    
     [SerializeField] private MapGenerator _mapGenerator;
 
     [Space(10), Header("Spawning")] [SerializeField]
     private bool _doAutoSpawn;
     [SerializeField]private float _SpawnDelay=2;
     [SerializeField]private GridAgent _ennemiesPrefabs;
-    
+
+    [FormerlySerializedAs("_ExtractorController")] [Space(10), Header("ConstrunctionMode")]
+    [SerializeField]public Extractor _Extractorprefab;
+
+    [SerializeField] public AWS _mortarPrefab;
+    [SerializeField] public AWS _turretPrefab;
+    [SerializeField] public AWS _FlameThrowerPrefab;
+
+
 
     [Space(20)] [Header("Debug Stuff")] 
     [SerializeField] private GridAgent _prefabGridAgent;
@@ -25,7 +37,15 @@ public class GamesManager : MonoBehaviour
     private Cell _selectedCell;
     private Camera _camera;
     private float _spawntimer=0;
-    
+    private bool _isInContructionMode;
+    private GameObject _contructionghost;
+    private IBuildable _selectedconstruction;
+    private GameObject _selectedGoconstruction;
+
+    private void Awake() {
+        Instance = this;
+    }
+
     void Start() {
         _camera = Camera.main;
         
@@ -35,15 +55,22 @@ public class GamesManager : MonoBehaviour
     void Update() {
         
         // Debug Stuff
-        if( Input.GetButtonDown("Fire1")) ClickOnMap();
+        if( Input.GetButtonDown("Fire")) ClickOnMap();
         if (Input.GetKeyDown(KeyCode.A) && _selectedCell != null)_mapGenerator.CalculateFlowField(_selectedCell);
         if (Input.GetKeyDown(KeyCode.E) && _selectedCell != null) SpawnGridActor();
         if (Input.GetKeyDown(KeyCode.R) && _selectedCell != null) DebugCell();
         if (Input.GetKeyDown(KeyCode.T) && _selectedCell != null) DoMassExplosion();
         if (Input.GetKeyDown(KeyCode.Y) && _selectedCell != null) DoBurningGround();
-        
+        if (Input.GetKeyDown(KeyCode.U) ) StartContructionMode(_Extractorprefab,_Extractorprefab.gameObject);
+        if (Input.GetKeyDown(KeyCode.I) ) StartContructionMode(_mortarPrefab,_mortarPrefab.gameObject);
+        if (Input.GetKeyDown(KeyCode.O) ) StartContructionMode(_turretPrefab,_turretPrefab.gameObject);
+        if (Input.GetKeyDown(KeyCode.P) ) StartContructionMode(_FlameThrowerPrefab,_FlameThrowerPrefab.gameObject);
+        if( Input.GetButtonDown("Fire")&&_isInContructionMode)ManageContruction();
+
         //GamesStuff
         ManageEnnemieSpawning();
+        ManagerContructionMode();
+        
     }
     
     [ContextMenu("DisplayCenterMap")]
@@ -101,6 +128,19 @@ public class GamesManager : MonoBehaviour
             }
         }
     }
+
+    public void DoMassExplosion(Vector3 pos) {
+        List<Cell> cells = new List<Cell>();
+        Cell origin = _mapGenerator.GetCellFromWorld(pos);
+        cells.AddRange(_mapGenerator.GetNeighbors4Diagonal(origin));
+        cells.AddRange(_mapGenerator.GetNeighbors4Straingt(origin));
+        cells.Add(origin);
+        foreach (var cell in cells) {
+            if (cell.Building == null) {
+                cell.IsWall = true;
+            }
+        }  
+    }
     private void DoBurningGround() {
         Debug.Log("DoMassExpolo");
         List<Cell> cells = new List<Cell>();
@@ -110,6 +150,63 @@ public class GamesManager : MonoBehaviour
             if (cell.Building == null) {
                 cell.SetBurning(10);
             }
+        }
+    }
+    public void DoBurningGround(Vector3 pos) {
+        Debug.Log("DoMassExpolo");
+        List<Cell> cells = new List<Cell>();
+        Cell origin = _mapGenerator.GetCellFromWorld(pos);
+        cells.AddRange(_mapGenerator.GetNeighbors4Straingt(origin));
+        cells.Add(origin);
+        foreach (var cell in cells) {
+            if (cell.Building == null) {
+                cell.SetBurning(10);
+            }
+        }
+    }
+    private void StartContructionMode(IBuildable buildable,GameObject go)
+    {
+        if (!_isInContructionMode) {
+            _contructionghost = Instantiate(GreenDebugCube);
+            _isInContructionMode = true;
+            _selectedconstruction = buildable;
+            _selectedGoconstruction = go;
+            return;
+        }
+        Destroy(_contructionghost);
+        _isInContructionMode = false;
+        _selectedconstruction = null;
+        _selectedGoconstruction = null;
+    }
+
+    private void ManagerContructionMode()
+    {
+        if (!_isInContructionMode) return;
+        RaycastHit hit;
+        if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out hit, 50, _groundLayerMask)) {
+            Cell selectedCell =_mapGenerator.GetCellFromWorld(hit.point);
+            //if (selectedCell == null|| selectedCell.IsWall ||selectedCell.Building!=null) return;
+            //_contructionghost.transform.position = selectedCell.transform.position;
+            if (_selectedconstruction.CanBeBuild(selectedCell)) {
+                _contructionghost.transform.position = selectedCell.transform.position;
+            }
+        }
+    }
+
+    public void ManageContruction() {
+        RaycastHit hit;
+        if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out hit, 50, _groundLayerMask))
+        { 
+            Cell selectedCell =_mapGenerator.GetCellFromWorld(hit.point);
+            if (! _selectedconstruction.CanBeBuild(selectedCell)) return;
+            
+            GameObject extra =Instantiate(_selectedGoconstruction, selectedCell.transform.position, Quaternion.identity);
+            extra.GetComponent<IBuildable>().OnBuild(_selectedCell);
+            
+            selectedCell.Building = extra.gameObject;
+            StartContructionMode(null, null);
+
+
         }
     }
 }

@@ -157,6 +157,7 @@ MonoBehaviour:
   _ps_Burning: {fileID: 6685146302496302671}
   _damage: 5
   _attackDelay: 2
+  _animator: {fileID: 6656213048409355057}
 --- !u!1001 &2716836714881841930
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -427,7 +428,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -29.148739
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1440515283501229000, guid: d0ef30994a6b00745bbaddf518297861, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -435,6 +437,12 @@ PrefabInstance:
 --- !u!4 &1145820674096630937 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3049747614360762259, guid: d0ef30994a6b00745bbaddf518297861,
+    type: 3}
+  m_PrefabInstance: {fileID: 2716836714881841930}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &6656213048409355057 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 8785320116205586491, guid: d0ef30994a6b00745bbaddf518297861,
     type: 3}
   m_PrefabInstance: {fileID: 2716836714881841930}
   m_PrefabAsset: {fileID: 0}

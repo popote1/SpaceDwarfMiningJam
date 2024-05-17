@@ -77,4 +77,6 @@ public class Extractor : MonoBehaviour , IDamageble , IBuildable
         }
     }
     
+    
+    
 }

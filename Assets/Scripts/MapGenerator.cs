@@ -115,6 +115,24 @@ public class MapGenerator : MonoBehaviour
         if(neighbor!=null) returnList.Add(neighbor);
         return returnList;
     }
+
+    public List<Cell> GetCrossCellsFromWorldPos(Vector3 pos)
+    {
+        Cell cell = GetCellFromWorld(pos);
+        if (cell == null) return null;
+        List<Cell> returnList = new List<Cell>();
+        returnList.Add(cell);
+        Cell neighbor;
+        neighbor = GetCell(cell.Coordinate.x - 1, cell.Coordinate.y );
+        if(neighbor!=null) returnList.Add(neighbor);
+        neighbor = GetCell(cell.Coordinate.x , cell.Coordinate.y -1);
+        if(neighbor!=null) returnList.Add(neighbor);
+        neighbor = GetCell(cell.Coordinate.x + 1, cell.Coordinate.y );
+        if(neighbor!=null) returnList.Add(neighbor);
+        neighbor = GetCell(cell.Coordinate.x , cell.Coordinate.y + 1);
+        if(neighbor!=null) returnList.Add(neighbor);
+        return returnList;
+    }
     
     
     private Cell GetCell(int x, int y) {

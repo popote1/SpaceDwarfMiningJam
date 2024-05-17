@@ -11,6 +11,7 @@ namespace Ressources
         [SerializeField] private Color _gazColor = Color.green;
         [SerializeField] private Color _petrolColor = Color.black;
         [SerializeField] private Color _MassColor = Color.blue;
+        [SerializeField] private GameObject _exploisionPrefab;
         
         [FormerlySerializedAs("_resourceType")] [SerializeField]
         public Metrics.RESSOURCETYPE resourceType;
@@ -26,8 +27,8 @@ namespace Ressources
         }
 
         public void SetRessourseType(Metrics.RESSOURCETYPE ressourcetype) {
-            Resource = resourceType;
-            switch (Resource) {
+            resourceType = ressourcetype;
+            switch (resourceType) {
                 case Metrics.RESSOURCETYPE.None:mesh.material.color = Color.magenta; break;
                 case Metrics.RESSOURCETYPE.Gaz: mesh.material.color = _gazColor;break;
                 case Metrics.RESSOURCETYPE.Petrole: mesh.material.color = _petrolColor; break;
@@ -38,7 +39,23 @@ namespace Ressources
 
 
         public void TakeDamage(int damage) {
+            Instantiate(_exploisionPrefab, transform.position, Quaternion.identity);
+            switch (resourceType) {
+                case Metrics.RESSOURCETYPE.None:
+                    break;
+                case Metrics.RESSOURCETYPE.Gaz:
+                    break;
+                case Metrics.RESSOURCETYPE.Petrole:
+                    GamesManager.Instance.DoBurningGround(transform.position);
+                    break;
+                case Metrics.RESSOURCETYPE.Mass:
+                    GamesManager.Instance.DoMassExplosion(transform.position);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             Destroy(gameObject);
         }
+        
     }
 }
