@@ -18,9 +18,13 @@ public class GamesManager : MonoBehaviour
     [SerializeField]private GridAgent _ennemiesPrefabs;
 
     [FormerlySerializedAs("_ExtractorController")] [Space(10), Header("ConstrunctionMode")]
-    public Extractor _Extractorprefab;
+    [SerializeField]public Extractor _Extractorprefab;
 
-    
+    [SerializeField] public AWS _mortarPrefab;
+    [SerializeField] public AWS _turretPrefab;
+    [SerializeField] public AWS _FlameThrowerPrefab;
+
+
 
     [Space(20)] [Header("Debug Stuff")] 
     [SerializeField] private GridAgent _prefabGridAgent;
@@ -36,6 +40,7 @@ public class GamesManager : MonoBehaviour
     private bool _isInContructionMode;
     private GameObject _contructionghost;
     private IBuildable _selectedconstruction;
+    private GameObject _selectedGoconstruction;
 
     private void Awake() {
         Instance = this;
@@ -56,7 +61,10 @@ public class GamesManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R) && _selectedCell != null) DebugCell();
         if (Input.GetKeyDown(KeyCode.T) && _selectedCell != null) DoMassExplosion();
         if (Input.GetKeyDown(KeyCode.Y) && _selectedCell != null) DoBurningGround();
-        if (Input.GetKeyDown(KeyCode.U) ) StartContructionMode();
+        if (Input.GetKeyDown(KeyCode.U) ) StartContructionMode(_Extractorprefab,_Extractorprefab.gameObject);
+        if (Input.GetKeyDown(KeyCode.I) ) StartContructionMode(_mortarPrefab,_mortarPrefab.gameObject);
+        if (Input.GetKeyDown(KeyCode.O) ) StartContructionMode(_turretPrefab,_turretPrefab.gameObject);
+        if (Input.GetKeyDown(KeyCode.P) ) StartContructionMode(_FlameThrowerPrefab,_FlameThrowerPrefab.gameObject);
         if( Input.GetButtonDown("Fire")&&_isInContructionMode)ManageContruction();
 
         //GamesStuff
@@ -156,17 +164,19 @@ public class GamesManager : MonoBehaviour
             }
         }
     }
-    private void StartContructionMode()
+    private void StartContructionMode(IBuildable buildable,GameObject go)
     {
-        if (_isInContructionMode) {
-            Destroy(_contructionghost);
-            _isInContructionMode = false;
-            _selectedconstruction = _Extractorprefab;
+        if (!_isInContructionMode) {
+            _contructionghost = Instantiate(GreenDebugCube);
+            _isInContructionMode = true;
+            _selectedconstruction = buildable;
+            _selectedGoconstruction = go;
             return;
         }
-        _contructionghost = Instantiate(GreenDebugCube);
-        _isInContructionMode = true;
+        Destroy(_contructionghost);
+        _isInContructionMode = false;
         _selectedconstruction = null;
+        _selectedGoconstruction = null;
     }
 
     private void ManagerContructionMode()
@@ -177,7 +187,7 @@ public class GamesManager : MonoBehaviour
             Cell selectedCell =_mapGenerator.GetCellFromWorld(hit.point);
             //if (selectedCell == null|| selectedCell.IsWall ||selectedCell.Building!=null) return;
             //_contructionghost.transform.position = selectedCell.transform.position;
-            if (_Extractorprefab.GetComponent<IBuildable>().CanBeBuild(selectedCell)) {
+            if (_selectedconstruction.CanBeBuild(selectedCell)) {
                 _contructionghost.transform.position = selectedCell.transform.position;
             }
         }
@@ -188,13 +198,13 @@ public class GamesManager : MonoBehaviour
         if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out hit, 50, _groundLayerMask))
         { 
             Cell selectedCell =_mapGenerator.GetCellFromWorld(hit.point);
-            StartContructionMode();
-            if (! _Extractorprefab.GetComponent<IBuildable>().CanBeBuild(selectedCell)) return;
+            if (! _selectedconstruction.CanBeBuild(selectedCell)) return;
             
-            Extractor extra =Instantiate(_Extractorprefab, selectedCell.transform.position, Quaternion.identity);
-            extra.OnBuild(_selectedCell);
+            GameObject extra =Instantiate(_selectedGoconstruction, selectedCell.transform.position, Quaternion.identity);
+            extra.GetComponent<IBuildable>().OnBuild(_selectedCell);
             
             selectedCell.Building = extra.gameObject;
+            StartContructionMode(null, null);
 
 
         }

@@ -25,7 +25,7 @@ public class AWS : MonoBehaviour, IBuildable
     {
         CheckForTarget();
         timeSinceLastShot += Time.deltaTime;
-        if (timeSinceLastShot > 1 / fireRate) {
+        if (timeSinceLastShot >  fireRate) {
             timeSinceLastShot = 0;
             AttackEnemies();
         }

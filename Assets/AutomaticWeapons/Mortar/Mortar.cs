@@ -8,11 +8,11 @@ public class Mortar : AWS
     public float ProjectileMaxLifeTime = 1f;
     public float MaxEnnemyDistance = 25f;
 
-    public ParticleSystem detonationParticle;
+    public ParticleSystem DetonationParticle;
 
     public void Start()
     {
-        FireRate = 2f;
+        FireRate = 5f;
     }
 
     protected override void AttackEnemy(GridAgent enemy) {
@@ -22,6 +22,7 @@ public class Mortar : AWS
         mortarProjectile.maxHeight = ProjectilHeight;
         mortarProjectile.PosTarget = enemy.transform.position;
         mortarProjectile.LifeTime = calculateBulletLifeTime(enemy.transform.position);
+        if( DetonationParticle!=null) DetonationParticle.Play();
     }
 
     protected override void ManageOrientation()
