@@ -123,5 +123,5 @@ MonoBehaviour:
   PosTarget: {x: 0, y: 0, z: 0}
   maxHeight: 5
   LifeTime: 0.5
-  ExploisionEffect: {fileID: 5926053748651929171, guid: 22f612fc25dfce340b520720784f528a,
+  ExploisionEffect: {fileID: 4181821429378064025, guid: a119b273302b286419f357f26fd00013,
     type: 3}
