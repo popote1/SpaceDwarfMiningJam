@@ -20,7 +20,7 @@ TagManager:
   - 
   - LayerMask
   - SeeThrough
-  - 
+  - NoSpecialLight
   - 
   - 
   - 
