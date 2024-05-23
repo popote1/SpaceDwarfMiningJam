@@ -4,8 +4,7 @@ using UnityEngine.Serialization;
 
 namespace Ressources
 {
-    public class BarrelInfos : MonoBehaviour , IDamageble
-    {
+    public class BarrelInfos : MonoBehaviour , IDamageble {
         [SerializeField] private MeshRenderer mesh;
 
         [SerializeField] private Color _gazColor = Color.green;
@@ -15,6 +14,8 @@ namespace Ressources
         
         [FormerlySerializedAs("_resourceType")] [SerializeField]
         public Metrics.RESSOURCETYPE resourceType;
+        
+        
 
         public Metrics.RESSOURCETYPE Resource
         {
@@ -22,8 +23,13 @@ namespace Ressources
             set => resourceType = value;
         }
 
+        private Rigidbody _rb;
+        private Collider _col;
+
         private void Awake() {
             mesh = GetComponent<MeshRenderer>();
+            _rb = GetComponent<Rigidbody>();
+            _col = GetComponent<Collider>();
         }
 
         public void SetRessourseType(Metrics.RESSOURCETYPE ressourcetype) {
@@ -55,6 +61,19 @@ namespace Ressources
                     throw new ArgumentOutOfRangeException();
             }
             Destroy(gameObject);
+        }
+
+        public void StartCarring(Transform carringPlace) {
+            transform.SetParent(carringPlace);
+            transform.SetPositionAndRotation(carringPlace.position, carringPlace.rotation);
+            _rb.isKinematic = true;
+            _col.enabled = false;
+        }
+        
+        public void EndCarring() {
+            transform.SetParent(null);
+            _rb.isKinematic = false;
+            _col.enabled = true;
         }
         
     }

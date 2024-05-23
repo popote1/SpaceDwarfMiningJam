@@ -9,16 +9,18 @@ using Random = UnityEngine.Random;
 public class GamesManager : MonoBehaviour
 {
     public static GamesManager Instance;
-    
+
+    public EventHandler OnRessourceUpdate;
     [SerializeField] private MapGenerator _mapGenerator;
 
     [Space(10), Header("Spawning")] [SerializeField]
     private bool _doAutoSpawn;
-    [SerializeField]private float _SpawnDelay=2;
-    [SerializeField]private GridAgent _ennemiesPrefabs;
 
-    [FormerlySerializedAs("_ExtractorController")] [Space(10), Header("ConstrunctionMode")]
-    [SerializeField]public Extractor _Extractorprefab;
+    [SerializeField] private float _SpawnDelay = 2;
+    [SerializeField] private GridAgent _ennemiesPrefabs;
+
+    [FormerlySerializedAs("_ExtractorController")] [Space(10), Header("ConstrunctionMode")] [SerializeField]
+    public Extractor _Extractorprefab;
 
     [SerializeField] public AWS _mortarPrefab;
     [SerializeField] public AWS _turretPrefab;
@@ -26,8 +28,9 @@ public class GamesManager : MonoBehaviour
 
 
 
-    [Space(20)] [Header("Debug Stuff")] 
-    [SerializeField] private GridAgent _prefabGridAgent;
+    [Space(20)] [Header("Debug Stuff")] [SerializeField]
+    private GridAgent _prefabGridAgent;
+
     [SerializeField] private GameObject GreenDebugCube;
     [SerializeField] private GameObject RedDebugCube;
     [SerializeField] private GameObject SelectionPointer;
@@ -36,13 +39,23 @@ public class GamesManager : MonoBehaviour
 
     private Cell _selectedCell;
     private Camera _camera;
-    private float _spawntimer=0;
+    private float _spawntimer = 0;
     private bool _isInContructionMode;
     private GameObject _contructionghost;
     private IBuildable _selectedconstruction;
     private GameObject _selectedGoconstruction;
 
-    private void Awake() {
+
+    private int _mass;
+    private int _petrol;
+    private int _gaz;
+
+    public int Mass { get => _mass;}
+    public int Petrol { get => _petrol;}
+    public int Gaz { get => _gaz;}
+
+
+private void Awake() {
         Instance = this;
     }
 
@@ -71,6 +84,19 @@ public class GamesManager : MonoBehaviour
         ManageEnnemieSpawning();
         ManagerContructionMode();
         
+    }
+
+    public void ChangeMass(int value) {
+        _mass += value;
+        OnRessourceUpdate?.Invoke(this, EventArgs.Empty);
+    }
+    public void ChangePetrol(int value) {
+        _petrol += value;
+        OnRessourceUpdate?.Invoke(this, EventArgs.Empty);
+    }
+    public void ChangeGaz(int value) {
+        _gaz += value;
+        OnRessourceUpdate?.Invoke(this, EventArgs.Empty);
     }
     
     [ContextMenu("DisplayCenterMap")]

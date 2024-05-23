@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Ressources;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,8 +13,7 @@ namespace Character {
         public bool running;
         
         [Header("Carrying")]
-        public bool carrying;
-        public GameObject itemCarried;
+        public BarrelInfos itemCarried;
         public Transform itemPickPlacement;
         
         [Header("Shoot")]
@@ -39,6 +39,11 @@ namespace Character {
         
         [Header("Misc")]
         public GameObject hitEffectPrefab;
+
+        public bool Carrying {
+            get => itemCarried != null;
+        }
+
         
         private void FixedUpdate() {
             Vector2 move = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
@@ -65,7 +70,7 @@ namespace Character {
                 animator.SetBool("Run", false);
                 running = false;
             }
-            if (Input.GetButtonDown("Fire") && !shooting && !carrying) {
+            if (Input.GetButtonDown("Fire") && !shooting && !Carrying) {
                 animator.SetTrigger("Shoot");
                 gunAudioSource.Play();
                 particleSystems.transform.position = particleTransformPoint.position;
@@ -73,7 +78,7 @@ namespace Character {
                 shooting = true;
                 _shootCooldownTimer = 0;
             }
-            if (shooting && !carrying) {
+            if (shooting && !Carrying) {
                 if (_shootCooldownTimer >= shootCooldown) { _shootCooldownTimer = 0; shooting = false; }
                 if (_shootCooldownTimer is >= 0.55f and <= 0.6f) { foreach (ParticleSystem ps in shootParticleSystems) { ps.Play(); }}
                 _shootCooldownTimer += Time.deltaTime;

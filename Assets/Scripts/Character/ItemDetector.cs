@@ -5,8 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace Character
 {
-    public class ItemDetector : MonoBehaviour
-    {
+    public class ItemDetector : MonoBehaviour {
         private CharacterController _parentCharacter;
         private GameObject _itemDetected;
         private float _timerTake;
@@ -16,9 +15,9 @@ namespace Character
         private bool _canDrop;
         private bool _itemTaken;
         private bool _correctMachine;
+        
 
-        private void Awake()
-        {
+        private void Awake() {
             _parentCharacter = GetComponentInParent<CharacterController>();
             _canTake = true;
             _itemDropped = false;
@@ -27,57 +26,64 @@ namespace Character
         }
 
         private void OnTriggerEnter(Collider other) {
-            if (other.CompareTag("Item") && !_parentCharacter.carrying) {
+            if (other.CompareTag("Item") && !_parentCharacter.Carrying) {
                 _itemDetected = other.gameObject;
             }
         }
         private void OnTriggerExit(Collider other) {
-            if (other.CompareTag("Item") && !_parentCharacter.carrying) { _itemDetected = null; }
+            if (other.CompareTag("Item") && !_parentCharacter.Carrying) { _itemDetected = null; }
             if (other.CompareTag("Machine")) { _correctMachine = false; }
         }
 
         private void OnTriggerStay(Collider other) {
-            if (other.CompareTag("Item") && !_parentCharacter.carrying && _canTake) {
-                if (other.gameObject == _itemDetected) {
+            if (other.CompareTag("Item") && !_parentCharacter.Carrying && _canTake) {
+                if (other.GetComponent<BarrelInfos>()!=null) {
                     if (Input.GetButtonDown("Pick")) {
-                        int randomClipChoose = Random.Range(0, _parentCharacter.carryDropSounds.Count);
-                        _parentCharacter.audioSource.clip = _parentCharacter.carryDropSounds[randomClipChoose];
-                        _parentCharacter.audioSource.Play();
+                        
+                        PlayPickupSound();
+                        
+                        
                         Debug.Log("Picked item");
-                        _parentCharacter.carrying = true;
-                        _itemDetected.GetComponent<Rigidbody>().isKinematic = true;
-                        _itemDetected.GetComponent<CapsuleCollider>().enabled = false;
-                        _parentCharacter.itemCarried = _itemDetected;
+                        BarrelInfos barrel = other.GetComponent<BarrelInfos>();
+                        barrel.StartCarring(_parentCharacter.itemPickPlacement.transform);
+                        _parentCharacter.itemCarried = barrel;
+                        
                         Debug.Log("Barrel of "+ _parentCharacter.itemCarried.GetComponent<BarrelInfos>().resourceType + " carried.");
+                        
                         _canTake = false;
                         _itemTaken = true;
                         _canDrop = false;
-                        _itemDetected.gameObject.transform.parent = _parentCharacter.itemPickPlacement.transform;
-                        _itemDetected.gameObject.transform.position = _parentCharacter.itemPickPlacement.position;
-                        _itemDetected.gameObject.transform.rotation = _parentCharacter.itemPickPlacement.rotation;
                         _parentCharacter.animator.SetBool("Carry", true);
                     }
                 }
             }
 
-            if (other.CompareTag("Machine") && _parentCharacter.carrying && _canDrop)
+            if (other.CompareTag("Machine") && _parentCharacter.Carrying && _canDrop)
             {
-                if (other.GetComponent<MachineInfos>().resourceNeeded.ToString() == _parentCharacter.itemCarried.GetComponent<BarrelInfos>().resourceType.ToString())
+                Debug.Log("Try to put into machine");
+                MachineInfos machineInfos = other.GetComponent<MachineInfos>();
+                if (machineInfos.CanDropRessources(_parentCharacter.itemCarried.Resource))
                 {
                     _correctMachine = true;
-                    if (Input.GetButtonDown("Pick") && _parentCharacter.carrying && _canDrop && _correctMachine)
+                    if (Input.GetButtonDown("Pick") && _parentCharacter.Carrying && _canDrop && _correctMachine)
                     {
                         int randomClipChoose = Random.Range(0, _parentCharacter.carryDropSounds.Count);
                         _parentCharacter.audioSource.clip = _parentCharacter.carryDropSounds[randomClipChoose];
                         _parentCharacter.audioSource.Play();
+                        
+                        
                         Debug.Log("Putting the item in the fuckin machine");
                         other.GetComponent<MachineInfos>().capacityUsed += 1;
-                        _parentCharacter.carrying = false;
+                        other.GetComponent<MachineInfos>().DropRessources(_parentCharacter.itemCarried.Resource);
                         Destroy(_parentCharacter.itemCarried.gameObject);
                         _parentCharacter.itemCarried = null;
                         _itemDropped = true;
                         _parentCharacter.animator.SetBool("Carry", false);
                     }
+                }
+                else
+                {
+                    Debug.Log("Machine can't tack this resource");
                 }
             }
         }
@@ -90,19 +96,21 @@ namespace Character
                 _itemTaken = false;
                 _timerDrop = 0;
             }
-            if (Input.GetButtonDown("Pick") && _parentCharacter.carrying && _canDrop && !_correctMachine) {
+            if (Input.GetButtonDown("Pick") && _parentCharacter.Carrying && _canDrop && !_correctMachine) {
                 int randomClipChoose = Random.Range(0, _parentCharacter.carryDropSounds.Count);
                 _parentCharacter.audioSource.clip = _parentCharacter.carryDropSounds[randomClipChoose];
                 _parentCharacter.audioSource.Play();
                 Debug.Log("Drop item");
-                _parentCharacter.carrying = false;
-                Transform itemTransform = _parentCharacter.itemCarried.transform;
-                Transform parentTransform = _parentCharacter.transform;
-                itemTransform.parent = transform.root;
-                itemTransform.rotation = quaternion.Euler(0,0,0);
-                _parentCharacter.itemCarried.GetComponent<Rigidbody>().isKinematic = false;
-                _parentCharacter.itemCarried.GetComponent<CapsuleCollider>().enabled = true;
-                _parentCharacter.itemCarried = null;
+                
+                
+                _parentCharacter.itemCarried.EndCarring();
+                //Transform itemTransform = _parentCharacter.itemCarried.transform;
+                //Transform parentTransform = _parentCharacter.transform;
+                //itemTransform.parent = transform.root;
+                //itemTransform.rotation = quaternion.Euler(0,0,0);
+                //_parentCharacter.itemCarried.GetComponent<Rigidbody>().isKinematic = false;
+                //_parentCharacter.itemCarried.GetComponent<CapsuleCollider>().enabled = true;
+                //_parentCharacter.itemCarried = null;
                 _itemDropped = true;
                 _parentCharacter.animator.SetBool("Carry", false);
             }
@@ -112,6 +120,11 @@ namespace Character
                 _timerTake = 0;
             }
         }
-        
+
+        private void PlayPickupSound() {
+            int randomClipChoose = Random.Range(0, _parentCharacter.carryDropSounds.Count);
+            _parentCharacter.audioSource.clip = _parentCharacter.carryDropSounds[randomClipChoose];
+            _parentCharacter.audioSource.Play();
+        }
     }
 }

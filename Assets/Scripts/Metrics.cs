@@ -14,7 +14,8 @@ public static class Metrics {
         None,
         Gaz,
         Petrole,
-        Mass
+        Mass,
+        Everything
     }
 
     public static Vector3 BezierPoint(Vector3 pos1, Vector3 pos2, Vector3 key , float t) {
