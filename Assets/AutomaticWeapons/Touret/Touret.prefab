@@ -229,7 +229,7 @@ MonoBehaviour:
   rotationSpeed: 300
   TurretHead: {fileID: 9024978832579823515}
   PSShoot: {fileID: 7299532649660587166}
-  ImpactPrefab: {fileID: 5926053748651929171, guid: 46680a727162af94abe232f93a245908,
+  ImpactPrefab: {fileID: 5897630436054061725, guid: f98a44a5de833324aa758160ec480e5a,
     type: 3}
 --- !u!1 &6771405186746490019
 GameObject:

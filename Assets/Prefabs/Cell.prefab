@@ -163,7 +163,8 @@ MonoBehaviour:
   _prefabsBurningZone: {fileID: 2897224794742949110, guid: e82ffa5f35a3a1c449288f56f67779c0,
     type: 3}
   _ressouces: {fileID: 0}
-  _burningeffect: {fileID: 0}
+  _burningeffectPrefab: {fileID: 2974961798391832349, guid: e82ffa5f35a3a1c449288f56f67779c0,
+    type: 3}
   Building: {fileID: 0}
   Ressouces: 0
   Coordinate: {x: 0, y: 0}

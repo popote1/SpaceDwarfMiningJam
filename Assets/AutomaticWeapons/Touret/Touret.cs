@@ -44,7 +44,8 @@ public class Touret : AWS
         Vector3 direction = (_targetEnemy.position - TurretHead.position).normalized;
         RaycastHit hit;
         if (Physics.Raycast(TurretHead.position, direction, out hit, range)) {
-            Instantiate(ImpactPrefab, hit.point, Quaternion.identity);
+            GameObject go =Instantiate(ImpactPrefab, hit.point, Quaternion.identity);
+            go.transform.forward = transform.position - hit.point;
             if (hit.collider.gameObject.GetComponent<IDamageble>()!=null) {
                 hit.collider.gameObject.GetComponent<IDamageble>().TakeDamage(damage);
             }

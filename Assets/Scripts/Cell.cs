@@ -15,7 +15,8 @@ public class Cell : MonoBehaviour
     [SerializeField] private GameObject _prefabsSpawner;
     [SerializeField] private GameObject _prefabsBurningZone;
     [SerializeField] private GameObject _ressouces;
-    [SerializeField] private GameObject _burningeffect;
+    //[SerializeField] private GameObject _burningeffectPrefab;
+    [SerializeField] private BurningCell _burningeffectPrefab;
     
     public GameObject Building;
     public Metrics.RESSOURCETYPE Ressouces;
@@ -35,15 +36,11 @@ public class Cell : MonoBehaviour
         }
     }
     public bool IsBurning {
-        get => _isBurning;
-         private set {
-            _isBurning = value;
-            if( _isBurning&&_burningeffect==null) _burningeffect = Instantiate(_prefabsBurningZone, transform.position, quaternion.identity);
-            else if (_burningeffect != null&&!_isBurning) {
-                _burningtime = 0;
-                Destroy(_burningeffect);
-            }
+        get {
+            if (_burningCell==null) return false;
+            return _burningCell.IsBurning;
         }
+         private set { }
     }
     
     
@@ -56,16 +53,13 @@ public class Cell : MonoBehaviour
 
      
     public Vector2Int Coordinate; 
-
-    private bool _isBurning;
+    
     private bool _iswall;
-    private float _burningtime;
+    private BurningCell _burningCell;
 
     public void ResetMoveCost ()=> MoveCost = int.MaxValue;
 
-    private void Update() {
-        ManageBurning();
-    }
+    
 
     public void SetRessourcePrefab(){
         switch (Ressouces) {
@@ -92,18 +86,15 @@ public class Cell : MonoBehaviour
 
         if (_ressouces != null) _ressouces.transform.SetParent(transform);
     }
-
-    public void SetBurning(float time) {
-        if (_burningtime < time) _burningtime = time;
-        IsBurning = true;
-    }
-
-    private void ManageBurning() {
-        if(!IsBurning)return;
-        _burningtime -=Time.deltaTime;
-        if (_burningtime <= 0) {
-            IsBurning = false;
-            _burningtime = 0;
+    public void SetBurning(float time)
+    {
+        if (_burningCell != null) {
+            _burningCell.SetBurning(time);
+            return;
         }
+        _burningCell = Instantiate(_burningeffectPrefab, transform.position, quaternion.identity);
+        _burningCell.transform.SetParent(transform);
+        _burningCell.SetBurning(time);
     }
+    
 }

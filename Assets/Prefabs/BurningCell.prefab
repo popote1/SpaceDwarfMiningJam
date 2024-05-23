@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 459779529703208066}
   - component: {fileID: 6256983191516632855}
   - component: {fileID: 4802166294122546367}
+  - component: {fileID: 2974961798391832349}
   m_Layer: 0
   m_Name: BurningCell
   m_TagString: Untagged
@@ -84,6 +85,18 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2974961798391832349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2897224794742949110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9466c63b21e74b0a9640a5faf4ac7523, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5211284871670653666
 PrefabInstance:
   m_ObjectHideFlags: 0
