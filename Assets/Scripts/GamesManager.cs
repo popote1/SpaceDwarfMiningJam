@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -10,7 +11,7 @@ public class GamesManager : MonoBehaviour
 {
     public static GamesManager Instance;
 
-    public EventHandler OnRessourceUpdate;
+    public event EventHandler OnRessourceUpdate;
     [SerializeField] private MapGenerator _mapGenerator;
 
     [Space(10), Header("Spawning")] [SerializeField]
@@ -25,6 +26,7 @@ public class GamesManager : MonoBehaviour
     [SerializeField] public AWS _mortarPrefab;
     [SerializeField] public AWS _turretPrefab;
     [SerializeField] public AWS _FlameThrowerPrefab;
+    [SerializeField] private BuildingInfoStruct[] _buildingInfoStructs;
 
 
 
@@ -43,10 +45,11 @@ public class GamesManager : MonoBehaviour
     private bool _isInContructionMode;
     private GameObject _contructionghost;
     private IBuildable _selectedconstruction;
+    private int _selectionConstructionId = -1;
     private GameObject _selectedGoconstruction;
 
 
-    private int _mass;
+    private int _mass=5;
     private int _petrol;
     private int _gaz;
 
@@ -74,10 +77,14 @@ private void Awake() {
         if (Input.GetKeyDown(KeyCode.R) && _selectedCell != null) DebugCell();
         if (Input.GetKeyDown(KeyCode.T) && _selectedCell != null) DoMassExplosion();
         if (Input.GetKeyDown(KeyCode.Y) && _selectedCell != null) DoBurningGround();
-        if (Input.GetKeyDown(KeyCode.U) ) StartContructionMode(_Extractorprefab,_Extractorprefab.gameObject);
-        if (Input.GetKeyDown(KeyCode.I) ) StartContructionMode(_mortarPrefab,_mortarPrefab.gameObject);
-        if (Input.GetKeyDown(KeyCode.O) ) StartContructionMode(_turretPrefab,_turretPrefab.gameObject);
-        if (Input.GetKeyDown(KeyCode.P) ) StartContructionMode(_FlameThrowerPrefab,_FlameThrowerPrefab.gameObject);
+        if (Input.GetKeyDown(KeyCode.Alpha1) ) TryToBuild(0);
+        if (Input.GetKeyDown(KeyCode.Alpha2) ) TryToBuild(1);
+        if (Input.GetKeyDown(KeyCode.Alpha3) ) TryToBuild(2);
+        if (Input.GetKeyDown(KeyCode.Alpha4) ) TryToBuild(3);
+        //if (Input.GetKeyDown(KeyCode.U) ) StartContructionMode(_Extractorprefab,_Extractorprefab.gameObject);
+        //if (Input.GetKeyDown(KeyCode.I) ) StartContructionMode(_mortarPrefab,_mortarPrefab.gameObject);
+        //if (Input.GetKeyDown(KeyCode.O) ) StartContructionMode(_turretPrefab,_turretPrefab.gameObject);
+        //if (Input.GetKeyDown(KeyCode.P) ) StartContructionMode(_FlameThrowerPrefab,_FlameThrowerPrefab.gameObject);
         if( Input.GetButtonDown("Fire")&&_isInContructionMode)ManageContruction();
 
         //GamesStuff
@@ -107,8 +114,7 @@ private void Awake() {
         }
     }
 
-    private void ClickOnMap()
-    {
+    private void ClickOnMap() {
         RaycastHit hit;
         if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out hit, 50, _groundLayerMask))
         {
@@ -190,19 +196,21 @@ private void Awake() {
             }
         }
     }
-    private void StartContructionMode(IBuildable buildable,GameObject go)
+    private void StartContructionMode(IBuildable buildable,GameObject go, int id)
     {
         if (!_isInContructionMode) {
             _contructionghost = Instantiate(GreenDebugCube);
             _isInContructionMode = true;
             _selectedconstruction = buildable;
             _selectedGoconstruction = go;
+            _selectionConstructionId = id;
             return;
         }
         Destroy(_contructionghost);
         _isInContructionMode = false;
         _selectedconstruction = null;
         _selectedGoconstruction = null;
+        _selectionConstructionId = -1;
     }
 
     private void ManagerContructionMode()
@@ -228,11 +236,33 @@ private void Awake() {
             
             GameObject extra =Instantiate(_selectedGoconstruction, selectedCell.transform.position, Quaternion.identity);
             extra.GetComponent<IBuildable>().OnBuild(_selectedCell);
+
+            BuildingInfoStruct info = _buildingInfoStructs[_selectionConstructionId];
+            ChangeGaz(-info.Gaz);
+            ChangeMass(-info.Mass);
+            ChangePetrol(-info.Petrol);
             
             selectedCell.Building = extra.gameObject;
-            StartContructionMode(null, null);
-
-
+            StartContructionMode(null, null, -1);
         }
+    }
+
+    public void TryToBuild(int id) {
+        if (CanBuildBuilding(id)) {
+            StartContructionMode(
+                _buildingInfoStructs[id]._prefabBuilding.GetComponent<IBuildable>()
+                ,_buildingInfoStructs[id]._prefabBuilding , id);
+            return;
+        }
+        Debug.Log("Can't Build");
+    }
+
+    public bool CanBuildBuilding(int id) {
+        if (_buildingInfoStructs == null || _buildingInfoStructs.Length <= id) return false;
+        if (_buildingInfoStructs[id].Mass <= _mass
+            && _buildingInfoStructs[id].Gaz <= _gaz
+            && _buildingInfoStructs[id].Petrol <= _petrol
+            && _buildingInfoStructs[id]._prefabBuilding != null) return true;
+        return false;
     }
 }
