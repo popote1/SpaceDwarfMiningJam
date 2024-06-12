@@ -42,12 +42,12 @@ MonoBehaviour:
     AfterOpaque: 0
     Source: 1
     NormalSamples: 1
-    Intensity: 0
-    DirectLightingStrength: 0.25
-    Radius: 0.25
+    Intensity: 4.9
+    DirectLightingStrength: 0.568
+    Radius: 1.2
     Samples: 0
     BlurQuality: 0
-    Falloff: 100
+    Falloff: 101.16
     SampleCount: -1
   m_BlueNoise256Textures:
   - {fileID: 2800000, guid: 36f118343fc974119bee3d09e2111500, type: 3}
@@ -121,7 +121,9 @@ MonoBehaviour:
   - {fileID: 4407748849616913769}
   - {fileID: -1567577178500630365}
   - {fileID: -4011135820085523094}
-  m_RendererFeatureMap: adc0de57c6d2eee569858db839782b3da3f8758ddcd83eea6a0df539399555c8
+  - {fileID: 7693396779048559678}
+  - {fileID: 717819448111068952}
+  m_RendererFeatureMap: adc0de57c6d2eee569858db839782b3da3f8758ddcd83eea6a0df539399555c83ee452f39b6fc46a18f78621fc34f609
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -147,7 +149,7 @@ MonoBehaviour:
   m_AssetVersion: 2
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 2239
+    m_Bits: 10431
   m_TransparentLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -164,6 +166,22 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
+--- !u!114 &717819448111068952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66627751791a67c44a6d99a0ed6ea9b1, type: 3}
+  m_Name: VFXDay23CustomPostProcessRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  m_bloomShader: {fileID: 4800000, guid: 44429dd8c49901649b2a9193923b2598, type: 3}
+  m_compositeShader: {fileID: -6465566751694194690, guid: 4a5f4d7c1c662194fb0b37cfee027249,
+    type: 3}
 --- !u!114 &4407748849616913769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,3 +224,18 @@ MonoBehaviour:
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
       cameraFieldOfView: 60
+--- !u!114 &7693396779048559678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43e03329eafe694428b1e9489e22ac0d, type: 3}
+  m_Name: CustomRenderPassFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  Setting:
+    Material: {fileID: 2100000, guid: 5fb20e9b58f865842aeddce75c40d308, type: 2}

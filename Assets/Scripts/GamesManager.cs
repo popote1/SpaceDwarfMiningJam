@@ -12,6 +12,7 @@ public class GamesManager : MonoBehaviour
     public static GamesManager Instance;
 
     public event EventHandler OnRessourceUpdate;
+    public event EventHandler<string> OnErrorMessage;
     [SerializeField] private MapGenerator _mapGenerator;
 
     [Space(10), Header("Spawning")] [SerializeField]
@@ -43,7 +44,7 @@ public class GamesManager : MonoBehaviour
     private Camera _camera;
     private float _spawntimer = 0;
     private bool _isInContructionMode;
-    private GameObject _contructionghost;
+    private BuildingGhost _contructionghost;
     private IBuildable _selectedconstruction;
     private int _selectionConstructionId = -1;
     private GameObject _selectedGoconstruction;
@@ -196,17 +197,18 @@ private void Awake() {
             }
         }
     }
-    private void StartContructionMode(IBuildable buildable,GameObject go, int id)
+    private void StartContructionMode(IBuildable buildable,GameObject go, int id, Vector3 startPos )
     {
         if (!_isInContructionMode) {
-            _contructionghost = Instantiate(GreenDebugCube);
+            _contructionghost = Instantiate(_buildingInfoStructs[id]._buildingGhost);
+            _contructionghost.transform.position = startPos;
             _isInContructionMode = true;
             _selectedconstruction = buildable;
             _selectedGoconstruction = go;
             _selectionConstructionId = id;
             return;
         }
-        Destroy(_contructionghost);
+        _contructionghost.Destroy();
         _isInContructionMode = false;
         _selectedconstruction = null;
         _selectedGoconstruction = null;
@@ -221,9 +223,11 @@ private void Awake() {
             Cell selectedCell =_mapGenerator.GetCellFromWorld(hit.point);
             //if (selectedCell == null|| selectedCell.IsWall ||selectedCell.Building!=null) return;
             //_contructionghost.transform.position = selectedCell.transform.position;
-            if (_selectedconstruction.CanBeBuild(selectedCell)) {
-                _contructionghost.transform.position = selectedCell.transform.position;
-            }
+            _contructionghost.SetBuildable(_selectedconstruction.CanBeBuild(selectedCell));
+            _contructionghost.SetBuildingPos(selectedCell.transform.position);
+            //if (_selectedconstruction.CanBeBuild(selectedCell)) {
+            //    _contructionghost.transform.position = selectedCell.transform.position;
+            //}
         }
     }
 
@@ -243,7 +247,7 @@ private void Awake() {
             ChangePetrol(-info.Petrol);
             
             selectedCell.Building = extra.gameObject;
-            StartContructionMode(null, null, -1);
+            StartContructionMode(null, null, -1, Vector3.zero);
         }
     }
 
@@ -251,10 +255,11 @@ private void Awake() {
         if (CanBuildBuilding(id)) {
             StartContructionMode(
                 _buildingInfoStructs[id]._prefabBuilding.GetComponent<IBuildable>()
-                ,_buildingInfoStructs[id]._prefabBuilding , id);
+                ,_buildingInfoStructs[id]._prefabBuilding , id, GetMouseWorldPos());
             return;
         }
-        Debug.Log("Can't Build");
+        OnErrorMessage?.Invoke(this,"PAS ASSEZ DE RESSOURCE");
+        //Debug.Log("Can't Build");
     }
 
     public bool CanBuildBuilding(int id) {
@@ -264,5 +269,14 @@ private void Awake() {
             && _buildingInfoStructs[id].Petrol <= _petrol
             && _buildingInfoStructs[id]._prefabBuilding != null) return true;
         return false;
+    }
+
+    private Vector3 GetMouseWorldPos() {
+        RaycastHit hit;
+        if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out hit, 50, _groundLayerMask)) {
+            return hit.point;
+        }
+        return Vector3.zero;
+        
     }
 }

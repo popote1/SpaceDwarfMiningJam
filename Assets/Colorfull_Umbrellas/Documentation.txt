@@ -1,0 +1,54 @@
+
+- - - - - - - - - - - - - - - - - - - - - Colorfull Umbrellas(FREE)- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+This pack contains 3d Model of an Umbrella with colorfull skin's.
+
+Technical Details:-
+		- Model(s) : Umbrella Open, Umbrella closed		
+		- Vertex count : Umbrella_Open(1908), Umbrella_Closed(1316)
+		- Tris count :  Umbrella_Open(3776), Umbrella_Closed(2624)
+		- Unwrapped : Yes
+		- Rigged : No
+		- Animations : No
+		- Prefab Variations : 6(Open), 6(Closed)
+		- Used Material(s) : Unity Standard Material
+		- Texture maps : Albedo/Base Color, Metalic Smoothness, Emission
+		- Texture Size : 2048(.png)
+		
+
+Features:-
+	- Lowpoly
+	- Colorfull textures
+	- Mesh Colliders attached
+	- PBR HQ beautifull Textures
+	- Include many color variations
+	- Mobile, AR supported
+	- Post processing layers included
+
+Folder details:-
+
+	Materials : Where the materials for the model located.
+	
+	Meshes : Contain FBX format of the 3d model.
+	
+	Textures : Contains Textures, that are in (.PNG) file format
+	
+	(Other folders - Prefabs, Scenes, Animations)
+
+Notes:
+Support URP, HDRP, LWRP, Built-in Render Pipeline.
+This project is submitted using Built-in Render Pipeline. If you are not using Built-in Render Pipeline, you need to manually reset the shader of the model to avoid it being pink
+
+How to use:-
+	
+	Simply drag and drop the prefab to your scene and use it.
+	(Prefab(s) located under 
+	Asset > Colorfull_Umbrellas> Prefabs).
+
+..................................................................................
+
+About Me : "SR Studios Kerala", Indie Game developer & 3D-2D Artist from Alappuzha, Kerala, India
+
+Contact : srstudioskerala@gmail.com
+
+................Thank you for downloading this package................................

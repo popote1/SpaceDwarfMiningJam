@@ -129,37 +129,10 @@ MonoBehaviour:
     - model: {fileID: 8926484042661614937}
       id: 0
       isStickyNote: 0
-    - model: {fileID: 8926484042661614940}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615006}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661614990}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661614942}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661614945}
-      id: 0
-      isStickyNote: 0
     - model: {fileID: 8926484042661614904}
       id: 0
       isStickyNote: 0
-    - model: {fileID: 8926484042661614974}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661614976}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661614931}
-      id: 0
-      isStickyNote: 0
     - model: {fileID: 8926484042661614935}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615011}
       id: 0
       isStickyNote: 0
     - model: {fileID: 8926484042661615018}
@@ -174,25 +147,10 @@ MonoBehaviour:
     - model: {fileID: 8926484042661615072}
       id: 0
       isStickyNote: 0
-    - model: {fileID: 8926484042661615075}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615087}
-      id: 0
-      isStickyNote: 0
     - model: {fileID: 8926484042661615085}
       id: 0
       isStickyNote: 0
     - model: {fileID: 8926484042661615028}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615097}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615055}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615079}
       id: 0
       isStickyNote: 0
     - model: {fileID: 8926484042661615109}
@@ -204,15 +162,6 @@ MonoBehaviour:
     - model: {fileID: 8926484042661615124}
       id: 0
       isStickyNote: 0
-    - model: {fileID: 8926484042661615139}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615141}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615145}
-      id: 0
-      isStickyNote: 0
     - model: {fileID: 8926484042661615157}
       id: 0
       isStickyNote: 0
@@ -222,15 +171,6 @@ MonoBehaviour:
     - model: {fileID: 8926484042661615114}
       id: 0
       isStickyNote: 0
-    - model: {fileID: 8926484042661615117}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615121}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661615165}
-      id: 0
-      isStickyNote: 0
   - title: ImpactDecal
     position:
       serializedVersion: 2
@@ -238,15 +178,12 @@ MonoBehaviour:
       y: 0
       width: 100
       height: 100
-    contents:
-    - model: {fileID: 0}
-      id: 0
-      isStickyNote: 0
+    contents: []
   stickyNoteInfos: []
   categories: []
   uiBounds:
     serializedVersion: 2
-    x: -0
+    x: 0
     y: -249
     width: 4750
     height: 3739

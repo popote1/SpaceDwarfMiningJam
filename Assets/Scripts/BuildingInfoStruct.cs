@@ -9,4 +9,5 @@ public struct BuildingInfoStruct
     public int Petrol;
 
     public GameObject _prefabBuilding;
+    public BuildingGhost _buildingGhost;
 }
